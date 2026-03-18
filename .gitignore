@@ -1,0 +1,23 @@
+```
+# Entorno virtual
+venv/
+
+# Credenciales — nunca subir esto a Git
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Base de datos local
+*.db
+*.sqlite
+
+# Editores
+.vscode/
+.idea/
+
+# Node (frontend, más adelante)
+node_modules/
+dist/
