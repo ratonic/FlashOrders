@@ -1,8 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.config import get_settings
+from backend.models.database import engine, Base
+from backend.models import schemas
 
 settings = get_settings()
+
+# ─── Crear tablas en la base de datos al arrancar ─────────────────────
+Base.metadata.create_all(bind=engine)
 
 # ─── Crear la aplicación ───────────────────────────────────────────────
 app = FastAPI(
@@ -14,7 +19,6 @@ app = FastAPI(
 )
 
 # ─── CORS ──────────────────────────────────────────────────────────────
-# Permite que el frontend React (puerto 5173) se comunique con el backend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
