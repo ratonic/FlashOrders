@@ -1,0 +1,29 @@
+from pydantic_settings import BaseSettings
+from functools import lru_cache
+
+
+class Settings(BaseSettings):
+    # Base de datos
+    database_url: str
+
+    # OpenAI
+    openai_api_key: str
+
+    # WhatsApp
+    whatsapp_token: str
+    whatsapp_phone_number_id: str
+    whatsapp_verify_token: str
+
+    # Aplicación
+    app_name: str = "Ghost Kitchen AI"
+    app_env: str = "development"
+    secret_key: str
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+
+
+@lru_cache()
+def get_settings() -> Settings:
+    return Settings()
