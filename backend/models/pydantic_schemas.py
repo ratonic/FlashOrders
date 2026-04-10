@@ -1,0 +1,56 @@
+from pydantic import BaseModel, Field
+from typing import Optional
+from datetime import datetime
+
+
+# ─── Modificadores ─────────────────────────────────────────────────────
+
+
+class ModifierBase(BaseModel):
+    name: str = Field(..., example="Extra queso")
+    extra_price: float = Field(default=0.0, example=1500.0)
+    group_name: Optional[str] = Field(None, example="Extras")
+
+
+class ModifierCreate(ModifierBase):
+    pass
+
+
+class ModifierResponse(ModifierBase):
+    id: int
+    product_id: int
+
+    class Config:
+        from_attributes = True
+
+
+# ─── Productos ─────────────────────────────────────────────────────────
+
+
+class ProductBase(BaseModel):
+    name: str = Field(..., example="Hamburguesa clásica")
+    description: Optional[str] = Field(None, example="Carne, lechuga, tomate")
+    price: float = Field(..., example=12000.0)
+    category: Optional[str] = Field(None, example="Hamburguesas")
+    is_available: bool = Field(default=True)
+
+
+class ProductCreate(ProductBase):
+    pass
+
+
+class ProductUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    price: Optional[float] = None
+    category: Optional[str] = None
+    is_available: Optional[bool] = None
+
+
+class ProductResponse(ProductBase):
+    id: int
+    created_at: Optional[datetime] = None
+    modifiers: list[ModifierResponse] = []
+
+    class Config:
+        from_attributes = True

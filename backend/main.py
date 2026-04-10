@@ -5,6 +5,7 @@ from backend.config import get_settings
 from backend.models.database import engine, Base, get_db
 from backend.models import schemas
 from backend.services.ai_service import extract_order_from_message
+from backend.routers import menu
 
 settings = get_settings()
 
@@ -29,6 +30,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ─── Routers ───────────────────────────────────────────────────────────
+app.include_router(menu.router)
+
 
 # ─── Ruta raíz ─────────────────────────────────────────────────────────
 @app.get("/", tags=["Sistema"])
@@ -52,7 +56,6 @@ async def health_check():
 async def test_ai(mensaje: str, db: Session = Depends(get_db)):
     """
     Prueba el motor de IA con un mensaje en lenguaje natural.
-    Úsalo desde Swagger en /docs para verificar que Groq responde.
     """
     result = await extract_order_from_message(
         message=mensaje,
