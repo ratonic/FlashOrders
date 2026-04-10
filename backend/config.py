@@ -6,8 +6,8 @@ class Settings(BaseSettings):
     # Base de datos
     database_url: str
 
-    # OpenAI
-    openai_api_key: str
+    # IA — Groq
+    groq_api_key: str
 
     # WhatsApp
     whatsapp_token: str

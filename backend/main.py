@@ -1,8 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
 from backend.config import get_settings
-from backend.models.database import engine, Base
+from backend.models.database import engine, Base, get_db
 from backend.models import schemas
+from backend.services.ai_service import extract_order_from_message
 
 settings = get_settings()
 
@@ -43,3 +45,17 @@ async def root():
 @app.get("/health", tags=["Sistema"])
 async def health_check():
     return {"status": "ok"}
+
+
+# ─── Prueba del motor de IA ────────────────────────────────────────────
+@app.post("/test/ai", tags=["Pruebas"])
+async def test_ai(mensaje: str, db: Session = Depends(get_db)):
+    """
+    Prueba el motor de IA con un mensaje en lenguaje natural.
+    Úsalo desde Swagger en /docs para verificar que Groq responde.
+    """
+    result = await extract_order_from_message(
+        message=mensaje,
+        db=db,
+    )
+    return result

@@ -5,12 +5,20 @@ from backend.config import get_settings
 
 settings = get_settings()
 
-# ─── Motor de conexión a PostgreSQL ────────────────────────────────────
+# ─── Motor de conexión — compatible con Supabase Pooler ───────────────
+# El pooler de Supabase usa PgBouncer en modo transaction.
+# Esto requiere desactivar prepared statements con
+# prepare_threshold=None y pool_pre_ping=True para detectar
+# conexiones caídas automáticamente.
 engine = create_engine(
     settings.database_url,
-    pool_pre_ping=True,  # verifica la conexión antes de usarla
-    pool_size=5,  # máximo 5 conexiones simultáneas
-    max_overflow=10,  # hasta 10 conexiones extra en picos
+    pool_pre_ping=True,
+    pool_size=5,
+    max_overflow=10,
+    connect_args={
+        "prepare_threshold": None,  # requerido por PgBouncer
+        "options": "-c timezone=America/Bogota",  # zona horaria Colombia
+    },
 )
 
 # ─── Sesión de base de datos ───────────────────────────────────────────
