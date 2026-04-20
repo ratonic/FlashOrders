@@ -7,6 +7,7 @@ from backend.models import schemas
 from backend.services.ai_service import extract_order_from_message
 from backend.routers import menu
 from backend.routers import whatsapp
+from backend.routers import orders
 
 settings = get_settings()
 
@@ -34,6 +35,7 @@ app.add_middleware(
 # ─── Routers ───────────────────────────────────────────────────────────
 app.include_router(menu.router)
 app.include_router(whatsapp.router)
+app.include_router(orders.router)
 
 
 # ─── Ruta raíz ─────────────────────────────────────────────────────────

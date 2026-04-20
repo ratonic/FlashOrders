@@ -54,3 +54,42 @@ class ProductResponse(ProductBase):
 
     class Config:
         from_attributes = True
+
+
+# ─── Factura ───────────────────────────────────────────────────────────
+
+
+class InvoiceItemModifier(BaseModel):
+    modifier_name: str
+    extra_price: float
+
+    class Config:
+        from_attributes = True
+
+
+class InvoiceItem(BaseModel):
+    product_name: str
+    quantity: int
+    unit_price: float
+    subtotal: float
+    modifications: list[InvoiceItemModifier] = []
+
+    class Config:
+        from_attributes = True
+
+
+class InvoiceResponse(BaseModel):
+    order_id: int
+    order_number: int
+    customer_phone: str
+    status: str
+    service_type: Optional[str]
+    delivery_address: Optional[str]
+    items: list[InvoiceItem]
+    subtotal_items: float  # suma sin modificadores
+    subtotal_modifiers: float  # suma solo modificadores
+    total: float
+    created_at: Optional[datetime]
+
+    class Config:
+        from_attributes = True
